@@ -4,6 +4,7 @@ from time import time
 
 
 class Metric(object):
+
     def __init__(self, name, value, ts=None):
         if not ts:
             ts = time()
@@ -20,7 +21,8 @@ class Metric(object):
 
 
 class MetricTypeBase(object):
-    def __init__(self, cleanup):
+
+    def __init__(self, cleanup=None):
         self.name = None
         self._cleanup = cleanup
         self._values = set([])
@@ -33,7 +35,8 @@ class MetricTypeBase(object):
         self._values.add(metric)
 
     def on_delete(self):
-        self._cleanup()
+        if self._cleanup:
+            self._cleanup()
 
     def on_send(self):
         self._values = set([])

@@ -9,6 +9,7 @@ from carbon.client.metrics.base import MetricTypeBase
 
 
 class LockFlag(object):
+
     def __init__(self):
         self.__flag = False
 
@@ -29,6 +30,7 @@ class LockFlag(object):
 
 class UDPClient(object):
     LOCK = LockFlag()
+    DEFAULT = metrics.Counter
 
     def __init__(self, host='127.0.0.1', port=2003, ns='carbonate'):
         assert isinstance(port, (int, long))
@@ -81,6 +83,9 @@ class UDPClient(object):
         metric_instance.on_create()
         self.__metrics[name] = metric_instance
 
+    def __contains__(self, item):
+        return item in self.__metrics
+
     @property
     def socket(self):
         if not self.__socket:
@@ -88,6 +93,8 @@ class UDPClient(object):
         return self.__socket
 
     def __getitem__(self, item):
+        if item not in self.__metrics:
+            self.__add_metric(self.DEFAULT, item)
         return self.__metrics[item]
 
     def __setitem__(self, key, value):

@@ -7,7 +7,8 @@ from carbon.client.metrics.base import MetricTypeBase, Metric
 
 
 class Timer(MetricTypeBase):
-    def __init__(self, cleanup):
+
+    def __init__(self, cleanup=None):
         MetricTypeBase.__init__(self, cleanup)
         self._current = None
         self._lock = RLock()

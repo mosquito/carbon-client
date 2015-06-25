@@ -2,8 +2,10 @@
 # encoding: utf-8
 from carbon.client.metrics.base import Metric, MetricTypeBase
 
+
 class Counter(MetricTypeBase):
-    def __init__(self, cleanup):
+
+    def __init__(self, cleanup=None):
         MetricTypeBase.__init__(self, cleanup)
         self.value = 0
 
