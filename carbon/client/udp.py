@@ -105,8 +105,13 @@ class UDPClient(object):
     @LOCK
     def send(self):
         metric_set = list(self.__metrics.values())
-        self.socket.sendto("\n".join(
-            filter(lambda x: x, map(lambda x: x.str(self.__ns), metric_set))),
+        values = list()
+        packet = "\n".join(
+            filter(lambda x: x, map(lambda x: x.str(self.__ns), metric_set))
+        )
+
+        self.socket.sendto(
+            packet,
             (self.__host, self.__port)
         )
 

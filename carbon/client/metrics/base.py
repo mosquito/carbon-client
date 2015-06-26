@@ -14,7 +14,7 @@ class Metric(object):
         self.__value = value
 
     def __str__(self):
-        return "%s %s %.2f" % (self.__name, self.__value, self.__ts)
+        return "%s %s %.6f" % (self.__name, self.__value, self.__ts)
 
     def __hash__(self):
         return hash(self.__str__())
