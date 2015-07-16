@@ -4,4 +4,6 @@ from carbon.client.metrics.base import MetricTypeBase
 
 
 class Collector(MetricTypeBase):
-    pass
+
+    def add(self, value):
+        self._values.add(Metric(name=self.name, value=value))
