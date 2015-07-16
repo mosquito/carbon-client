@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function
 from setuptools import setup, find_packages
 
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
 __author__ = 'Dmitry Orlov <me@mosquito.su>'
 
 
