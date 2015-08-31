@@ -6,6 +6,7 @@ import uuid
 import random
 import unittest
 
+
 def gen_uuid():
     return str(uuid.uuid4())
 
@@ -31,10 +32,10 @@ with patch('socket.socket', spec=socket.socket) as fake_socket,\
 
 class Base(unittest.TestCase):
     def setUp(self):
+        self.port = gen_int()
         self.host = gen_uuid()
         self.ns = gen_uuid()
-        self.port = gen_int()
-        self.client = client.UDPClient(host=self.host, port=self.port, ns=self.ns)
+        self.client = client.UDPClient(hosts="%s:%s" % (self.host, self.port), ns=self.ns)
 
     def tearDown(self):
         self.client.close()

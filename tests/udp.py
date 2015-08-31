@@ -5,8 +5,6 @@ from . import Base, gen_uuid
 
 class TestClient(Base):
     def testParams(self):
-        self.assertEqual(self.client.port, self.port)
-        self.assertEqual(self.client.host, self.host)
         self.assertEqual(self.client.ns, self.ns)
 
     def testSendHeartbeat(self):
@@ -48,23 +46,3 @@ class TestClient(Base):
 
     def testSetNameSpace5(self):
         self.client.ns = self.ns
-
-    def testSetHost(self):
-        self.assertIsNotNone(self.client.socket)
-        self.client.host = "test"
-        self.assertIsNone(self.client._UDPClient__socket)
-
-        self.assertIsNotNone(self.client.socket)
-        self.client.host = self.host
-        self.assertIsNone(self.client._UDPClient__socket)
-
-    def testSetPort1(self):
-        try:
-            self.client.port = 'a'
-        except AssertionError:
-            pass
-
-    def testSetPort1(self):
-        self.assertIsNotNone(self.client.socket)
-        self.client.port = self.port
-        self.assertIsNone(self.client._UDPClient__socket)

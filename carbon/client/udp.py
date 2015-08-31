@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from functools import wraps
 import re
+import logging
+
+from functools import wraps
 from socket import socket, AF_INET, SOCK_DGRAM
 
 from . import metrics
-from carbon.client.metrics.base import MetricTypeBase
+from .metrics.base import MetricTypeBase
+
+
+log = logging.getLogger('carbon.client.udp')
 
 
 class LockFlag(object):
@@ -32,38 +37,36 @@ class UDPClient(object):
     LOCK = LockFlag()
     DEFAULT = metrics.Counter
 
-    def __init__(self, host='127.0.0.1', port=2003, ns='carbonate'):
-        assert isinstance(port, (int, long))
-        self.__host = host
-        self.__port = port
+    def __init__(self, hosts='127.0.0.1', ns='carbon.client'):
+        self.__host = hosts
         self.__ns = ns
         self.__socket = None
+        self.__endpoints = map(
+            lambda x: x if len(x) > 1 else [x[0], 2003],
+            map(
+                lambda x: [int(i) if i.isdigit() else i for i in x.strip(" ").split(":")],
+                hosts.split(",")
+            )
+        )
+
         self.__sending = False
         self.__metrics = {}
         self.__add_metric(metrics.HeartBeat)
 
     @property
-    def host(self):
-        return self.__host
+    def hosts(self):
+        return self.__endpoints
 
-    @host.setter
+    @hosts.setter
     @LOCK
-    def host(self, host):
-        self.socket.close()
-        self.__socket = None
-        self.__host = host
-
-    @property
-    def port(self):
-        return self.__port
-
-    @port.setter
-    @LOCK
-    def port(self, port):
-        assert isinstance(port, (int, long))
-        self.socket.close()
-        self.__socket = None
-        self.__port = port
+    def hosts(self, hosts):
+        self.__endpoints = map(
+            lambda x: x if len(x) > 1 else [x[0], 2003],
+            map(
+                lambda x: [int(i) if i.isdigit() else i for i in x.strip(" ").split(":")],
+                hosts.split(",")
+            )
+        )
 
     @property
     def ns(self):
@@ -105,17 +108,28 @@ class UDPClient(object):
     @LOCK
     def send(self):
         metric_set = list(self.__metrics.values())
-        values = list()
+
         packet = "\n".join(
             filter(lambda x: x, map(lambda x: x.str(self.__ns), metric_set))
         )
 
-        self.socket.sendto(
-            packet,
-            (self.__host, self.__port)
-        )
+        for host, port in self.__endpoints:
+            self.socket.sendto(
+                packet,
+                (host, port)
+            )
 
         map(lambda m: m.on_send(), metric_set)
 
     def close(self):
         self.socket.close()
+
+
+class MultipleUDPClient(UDPClient):
+    def __init__(self, ns='carbon.client', *hostlist):
+
+        self.__ns = ns
+        self.__sockets = []
+        self.__sending = False
+        self.__metrics = {}
+        self.__add_metric(metrics.HeartBeat)
