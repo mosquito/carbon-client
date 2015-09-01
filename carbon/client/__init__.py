@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from __future__ import absolute_import
 import os
 
 from .udp import UDPClient
@@ -15,7 +16,8 @@ stat = UDPClient(
     )
 )
 
-import metrics
-import decorators
+from . import metrics
+from . import decorators
+from . import extras
 
 __all__ = ['metrics', 'decorators', 'UDPClient', 'stat']
