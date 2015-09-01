@@ -35,7 +35,10 @@ class Base(unittest.TestCase):
         self.port = gen_int()
         self.host = gen_uuid()
         self.ns = gen_uuid()
-        self.client = client.UDPClient(hosts="%s:%s" % (self.host, self.port), ns=self.ns)
+        self.client = client.UDPClient(
+            hosts="%s:%s" % (self.host, self.port),
+            ns=self.ns
+        )
 
     def tearDown(self):
         self.client.close()

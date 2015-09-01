@@ -2,35 +2,35 @@
 # encoding: utf-8
 from time import time
 from threading import RLock
+from .base import MetricTypeBase, Metric
 
-from carbon.client.metrics.base import MetricTypeBase, Metric
 
-
-class Timer(MetricTypeBase):
-
-    def __init__(self, cleanup=None):
-        MetricTypeBase.__init__(self, cleanup)
-        self._current = None
+class StopWatch(object):
+    def __init__(self):
         self._lock = RLock()
+        self._current = None
 
-    def __enter__(self):
-        self.start(False)
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.stop()
-
-    def start(self, restart=True):
+    def start(self):
         with self._lock:
-            if not restart and self._current:
-                raise RuntimeError('StopWatch are running')
             self._current = time()
 
     def stop(self):
-        if self._current is None:
-            return
-
+        assert self._current, "StopWatch not running"
         with self._lock:
-            delta = time() - self._current
-            self.add(Metric(name=self.name, value=delta))
-            self._current = None
+            return time() - self._current
+
+
+class Timer(MetricTypeBase):
+    def __init__(self, cleanup=None):
+        MetricTypeBase.__init__(self, cleanup)
+        self._current = None
+
+    @classmethod
+    def start(cls):
+        watch = StopWatch()
+        watch.start()
+        return watch
+
+    def stop(self, stop_watch):
+        assert isinstance(stop_watch, StopWatch)
+        self.add(Metric(name=self.name, value=stop_watch.stop()))

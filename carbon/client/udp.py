@@ -100,10 +100,12 @@ class UDPClient(object):
             self.__add_metric(self.DEFAULT, item)
         return self.__metrics[item]
 
-    def __setitem__(self, key, value):
-        assert issubclass(value, MetricTypeBase), "Unknown metric type"
-        assert isinstance(key, basestring)
-        self.__add_metric(value, key)
+    def __setitem__(self, name, metric_type):
+        assert issubclass(metric_type, MetricTypeBase), "Unknown metric type"
+        assert isinstance(name, basestring)
+
+        if name not in self or self.__metrics.get(name) is not metric_type:
+            self.__add_metric(metric_type, name)
 
     @LOCK
     def send(self):
@@ -123,13 +125,3 @@ class UDPClient(object):
 
     def close(self):
         self.socket.close()
-
-
-class MultipleUDPClient(UDPClient):
-    def __init__(self, ns='carbon.client', *hostlist):
-
-        self.__ns = ns
-        self.__sockets = []
-        self.__sending = False
-        self.__metrics = {}
-        self.__add_metric(metrics.HeartBeat)
