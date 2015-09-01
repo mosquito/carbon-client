@@ -13,6 +13,12 @@ from .metrics.base import MetricTypeBase
 log = logging.getLogger('carbon.client.udp')
 
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 class LockFlag(object):
 
     def __init__(self):
