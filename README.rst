@@ -1,6 +1,9 @@
 Carbon Client
 =============
 
+.. image:: https://travis-ci.org/mosquito/carbon-client.svg?branch=master
+    :target: https://travis-ci.org/mosquito/carbon-client
+
 Client for sending metrics into carbon server
 
 Example
