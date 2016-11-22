@@ -11,6 +11,8 @@ Example
 
 The simple test ::
 
+.. code-block:: python
+
     # You should set ENV variables CARBON_HOST and CARBON_NS
     # CARBON_HOST might contains multiple destinations (comma separated)
     from time import sleep
@@ -45,6 +47,7 @@ The simple test ::
 
 The advanced test ::
 
+.. code-block:: python
     from time import sleep
     from carbon.client import UDPClient
     from carmon.client.extras import SimpleCounter, SimpleTimer, SimlpeCollector
@@ -65,6 +68,8 @@ The advanced test ::
 
 
 Another test ::
+
+.. code-block:: python
 
     from time import sleep
     from carmon.client import stat
