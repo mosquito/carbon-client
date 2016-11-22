@@ -9,7 +9,7 @@ Client for sending metrics into carbon server
 Example
 +++++++
 
-The simple test ::
+The simple test :
 
 .. code-block:: python
 
@@ -45,9 +45,10 @@ The simple test ::
     stat.send()
 
 
-The advanced test ::
+The advanced test :
 
 .. code-block:: python
+
     from time import sleep
     from carbon.client import UDPClient
     from carmon.client.extras import SimpleCounter, SimpleTimer, SimlpeCollector
@@ -67,7 +68,7 @@ The advanced test ::
     client.send()
 
 
-Another test ::
+Another test :
 
 .. code-block:: python
 
