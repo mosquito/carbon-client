@@ -17,7 +17,7 @@ The simple test :
     # CARBON_HOST might contains multiple destinations (comma separated)
     from time import sleep
     from carbon.client import stat
-    from carmon.client.extras import SimpleCounter
+    from carbon.client.extras import SimpleCounter
 
     # Will be pended one or two metrics
     # carbon_client.counter_ok
@@ -51,7 +51,7 @@ The advanced test :
 
     from time import sleep
     from carbon.client import UDPClient
-    from carmon.client.extras import SimpleCounter, SimpleTimer, SimlpeCollector
+    from carbon.client.extras import SimpleCounter, SimpleTimer, SimlpeCollector
 
     # Will be send to multiple destinations
     client = UDPClient("127.0.0.1, 191.168.1.11:2003", "test")
@@ -73,7 +73,7 @@ Another test :
 .. code-block:: python
 
     from time import sleep
-    from carmon.client import stat
+    from carbon.client import stat
     from carbon.client import metrics
 
     # Counter
