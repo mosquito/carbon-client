@@ -63,7 +63,7 @@ class TestSimpleCollector(Base):
         name = gen_uuid()
         meas = gen_int()
 
-        with extras.SimlpeCollector(name, self.client) as collector:
+        with extras.SimpleCollector(name, self.client) as collector:
             collector.add(meas)
 
         data = self.get_packet()

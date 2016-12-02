@@ -54,7 +54,7 @@ class SimpleTimer(SimpleMetricBase):
         self._client[metric].stop(watch)
 
 
-class SimlpeCollector(SimpleMetricBase):
+class SimpleCollector(SimpleMetricBase):
     TYPE = Collector
 
     def __enter__(self):
