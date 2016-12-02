@@ -51,7 +51,7 @@ The advanced test :
 
     from time import sleep
     from carbon.client import UDPClient
-    from carbon.client.extras import SimpleCounter, SimpleTimer, SimlpeCollector
+    from carbon.client.extras import SimpleCounter, SimpleTimer, SimpleCollector
 
     # Will be send to multiple destinations
     client = UDPClient("127.0.0.1, 191.168.1.11:2003", "test")
