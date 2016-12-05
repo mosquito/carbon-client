@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # encoding: utf-8
 import re
 import logging
@@ -42,6 +41,8 @@ class LockFlag(object):
 class UDPClient(object):
     LOCK = LockFlag()
     DEFAULT = metrics.Counter
+
+    __slots__ = '__host', '__ns', '__socket', '__endpoints', '__sending', '__metrics'
 
     def __init__(self, hosts='127.0.0.1', ns='carbon.client'):
         self.__host = hosts

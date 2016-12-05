@@ -1,11 +1,12 @@
-#!/usr/bin/env python
 # encoding: utf-8
 from time import time
 from threading import RLock
-from .base import MetricTypeBase, Metric
+from .base import MeasurerBase, Metric
 
 
 class StopWatch(object):
+    __slots__ = '_lock', '_current'
+
     def __init__(self):
         self._lock = RLock()
         self._current = None
@@ -20,9 +21,11 @@ class StopWatch(object):
             return time() - self._current
 
 
-class Timer(MetricTypeBase):
+class Timer(MeasurerBase):
+    __slots__ = '_current',
+
     def __init__(self, cleanup=None):
-        MetricTypeBase.__init__(self, cleanup)
+        MeasurerBase.__init__(self, cleanup)
         self._current = None
 
     @classmethod

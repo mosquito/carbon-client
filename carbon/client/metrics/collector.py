@@ -1,9 +1,8 @@
-#!/usr/bin/env python
 # encoding: utf-8
-from carbon.client.metrics.base import MetricTypeBase, Metric
+from carbon.client.metrics.base import MeasurerBase, Metric
 
 
-class Collector(MetricTypeBase):
+class Collector(MeasurerBase):
 
     def add(self, value):
         self._values.add(Metric(name=self.name, value=value))

@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-# encoding: utf-8
-from ..metrics.timer import Timer
-from ..metrics.simple import Counter
-from ..metrics.heartbeat import HeartBeat
-from ..metrics.collector import Collector
+from .timer import Timer
+from .simple import Counter
+from .heartbeat import HeartBeat
+from .collector import Collector

@@ -1,9 +1,10 @@
-#!/usr/bin/env python
 # encoding: utf-8
 from time import time
+from abc import abstractmethod
 
 
 class Metric(object):
+    __slots__ = '__value', '__ts', '__name'
 
     def __init__(self, name, value, ts=None):
         if not ts:
@@ -20,7 +21,34 @@ class Metric(object):
         return hash(self.__str__())
 
 
-class MetricTypeBase(object):
+class MeasurerAbstract(object):
+    @abstractmethod
+    def __init__(self, cleanup=None):
+        raise NotImplementedError
+
+    @abstractmethod
+    def on_create(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def add(self, metric):
+        raise NotImplementedError
+
+    @abstractmethod
+    def on_delete(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def on_send(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def str(self, ns):
+        raise NotImplementedError
+
+
+class MeasurerBase(MeasurerAbstract):
+    __slots__ = '_value', '_cleanup', '_values', 'name'
 
     def __init__(self, cleanup=None):
         self.name = None
@@ -43,3 +71,6 @@ class MetricTypeBase(object):
 
     def str(self, ns):
         return "\n".join(map(lambda x: "%s.%s" % (ns, x) if x else '', list(self._values)))
+
+
+MetricTypeBase = MeasurerBase

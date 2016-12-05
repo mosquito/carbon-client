@@ -1,11 +1,12 @@
-#!/usr/bin/env python
 # encoding: utf-8
 from .udp import UDPClient
 from .metrics import Counter, Timer, Collector
 from . import stat
 
 
-class SimpleMetricBase(object):
+class SimpleMeasurerBase(object):
+    __slots__ = '_client', '_metric'
+
     def __init__(self, metric, client=None):
         if client is None:
             client = stat
@@ -15,7 +16,7 @@ class SimpleMetricBase(object):
         self._metric = metric
 
 
-class SimpleCounter(SimpleMetricBase):
+class SimpleCounter(SimpleMeasurerBase):
     TYPE = Counter
 
     def __enter__(self):
@@ -30,7 +31,7 @@ class SimpleCounter(SimpleMetricBase):
             self._client[metric].inc(1)
 
 
-class SimpleTimer(SimpleMetricBase):
+class SimpleTimer(SimpleMeasurerBase):
     TYPE = Timer
 
     def __enter__(self):
@@ -54,7 +55,7 @@ class SimpleTimer(SimpleMetricBase):
         self._client[metric].stop(watch)
 
 
-class SimpleCollector(SimpleMetricBase):
+class SimpleCollector(SimpleMeasurerBase):
     TYPE = Collector
 
     def __enter__(self):
@@ -65,3 +66,6 @@ class SimpleCollector(SimpleMetricBase):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
+
+
+SimpleMetricBase = SimpleMeasurerBase
