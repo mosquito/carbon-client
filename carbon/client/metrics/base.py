@@ -1,8 +1,10 @@
 # encoding: utf-8
+from functools import total_ordering
 from time import time
 from abc import abstractmethod
 
 
+@total_ordering
 class Metric(object):
     __slots__ = '__value', '__ts', '__name'
 
@@ -18,7 +20,22 @@ class Metric(object):
         return "%s %s %.6f" % (self.__name, self.__value, self.__ts)
 
     def __hash__(self):
-        return hash(self.__str__())
+        return hash(tuple(self))
+
+    def __iter__(self):
+        return iter((self.__name, self.__value, self.__ts))
+
+    def __eq__(self, other):
+        if not isinstance(other, Metric):
+            raise ValueError("Can't check equality with non-Metric object")
+
+        return tuple(self) == tuple(other)
+
+    def __gt__(self, other):
+        if not isinstance(other, Metric):
+            raise ValueError("Can't check equality with non-Metric object")
+
+        return tuple(self) > tuple(other)
 
 
 class MeasurerAbstract(object):

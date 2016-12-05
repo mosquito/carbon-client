@@ -6,7 +6,7 @@ from functools import wraps
 from socket import socket, AF_INET, SOCK_DGRAM
 
 from . import metrics
-from .metrics.base import MetricTypeBase
+from .metrics.base import MeasurerBase
 
 
 log = logging.getLogger('carbon.client.udp')
@@ -48,17 +48,26 @@ class UDPClient(object):
         self.__host = hosts
         self.__ns = ns
         self.__socket = None
-        self.__endpoints = map(
-            lambda x: x if len(x) > 1 else [x[0], 2003],
-            map(
-                lambda x: [int(i) if i.isdigit() else i for i in x.strip(" ").split(":")],
-                hosts.split(",")
-            )
-        )
 
         self.__sending = False
         self.__metrics = {}
+        self.__endpoints = self._parse_hosts(hosts)
         self.__add_metric(metrics.HeartBeat)
+
+    @staticmethod
+    def _parse_hosts(hosts):
+        endpoints = list()
+
+        for host_str in hosts.split(","):
+            if ":" in host_str:
+                host, port = host_str.split(":", 1)
+                port = int(port)
+            else:
+                host, port = host_str, 2003
+
+            endpoints.append((host, port))
+
+        return frozenset(endpoints)
 
     @property
     def hosts(self):
@@ -67,13 +76,7 @@ class UDPClient(object):
     @hosts.setter
     @LOCK
     def hosts(self, hosts):
-        self.__endpoints = map(
-            lambda x: x if len(x) > 1 else [x[0], 2003],
-            map(
-                lambda x: [int(i) if i.isdigit() else i for i in x.strip(" ").split(":")],
-                hosts.split(",")
-            )
-        )
+        self.__endpoints = self._parse_hosts(hosts)
 
     @property
     def ns(self):
@@ -81,10 +84,18 @@ class UDPClient(object):
 
     @ns.setter
     def ns(self, ns):
-        assert not ns.startswith('.'), "NameSpace mustn't starts with the dot."
-        assert not ns.endswith('.'), "NameSpace mustn't ends with the dot."
-        assert re.match('^[\w\d\._\-]+$', ns) is not None, "NameSpace must contain special chars (except '_', '-')"
-        assert not list(filter(lambda x: not x, ns.split('.'))), "Namespace must contain chars after dots."
+        if ns.startswith('.'):
+            raise ValueError("NameSpace mustn't starts with the dot.")
+
+        if ns.endswith('.'):
+            raise ValueError("NameSpace mustn't ends with the dot.")
+
+        if re.match('^[\w\d\._\-]+$', ns) is None:
+            raise ValueError("NameSpace mustn't contain special chars (except '_', '-')")
+
+        if bool(list(filter(lambda x: not x, ns.split('.')))):
+            raise ValueError("Namespace must contain chars after dots.")
+
         self.__ns = ns
 
     def __add_metric(self, metric, name=None):
@@ -108,7 +119,7 @@ class UDPClient(object):
         return self.__metrics[item]
 
     def __setitem__(self, name, metric_type):
-        assert issubclass(metric_type, MetricTypeBase), "Unknown metric type"
+        assert issubclass(metric_type, MeasurerBase), "Unknown metric type"
         assert isinstance(name, basestring)
 
         if name not in self or self.__metrics.get(name) is not metric_type:

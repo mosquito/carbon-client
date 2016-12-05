@@ -6,6 +6,16 @@ Carbon Client
 
 Client for sending metrics into carbon server
 
+Initialization
+++++++++++++++
+
+By default carbon-client creates a client based on os.environ variables:
+
+* CARBON_HOST - Contains one or many endpoints (e.g "127.0.0.1:2003, 10.2.1.0:2003")
+* CARBON_NS - it's a namespace for sending metrics (e.g. "carbon.coal-service")
+
+Actually you can configure this by hands.
+
 Example
 +++++++
 
