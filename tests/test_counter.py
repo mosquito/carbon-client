@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import random
+from six import b
 from . import Base, gen_int, gen_uuid, client, now
 
 
@@ -16,7 +17,7 @@ class TestCounter(Base):
 
         data = self.get_packet()
         for name, val in attrs:
-            self.assertIn('%s.%s %d %.2f' % (self.ns, name, val, now), data)
+            self.assertIn(b('%s.%s %d %.2f' % (self.ns, name, val, now)), data)
 
     def testCounterInc(self):
         attrs = []
@@ -32,7 +33,7 @@ class TestCounter(Base):
 
         data = self.get_packet()
         for name, val in attrs:
-            self.assertIn('%s.%s %d %.2f' % (self.ns, name, val, now), data)
+            self.assertIn(b('%s.%s %d %.2f' % (self.ns, name, val, now)), data)
 
     def testCounterDec(self):
         attrs = []
@@ -48,7 +49,7 @@ class TestCounter(Base):
 
         data = self.get_packet()
         for name, val in attrs:
-            self.assertIn('%s.%s %d %.2f' % (self.ns, name, val, now), data)
+            self.assertIn(b('%s.%s %d %.2f' % (self.ns, name, val, now)), data)
 
     def testCounterIncN(self):
         attrs = []
@@ -65,7 +66,7 @@ class TestCounter(Base):
 
         data = self.get_packet()
         for name, val in attrs:
-            self.assertIn('%s.%s %d %.2f' % (self.ns, name, val, now), data)
+            self.assertIn(b('%s.%s %d %.2f' % (self.ns, name, val, now)), data)
 
     def testCounterDecN(self):
         attrs = []
@@ -82,7 +83,7 @@ class TestCounter(Base):
 
         data = self.get_packet()
         for name, val in attrs:
-            self.assertIn('%s.%s %d %.2f' % (self.ns, name, val, now), data)
+            self.assertIn(b('%s.%s %d %.2f' % (self.ns, name, val, now)), data)
 
     def testCounterMultiple(self):
         attrs = []
@@ -98,4 +99,4 @@ class TestCounter(Base):
 
         data = self.get_packet()
         for name, val in attrs:
-            self.assertIn('%s.%s %d %.2f' % (self.ns, name, val, now), data)
+            self.assertIn(b('%s.%s %d %.2f' % (self.ns, name, val, now)), data)

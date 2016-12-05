@@ -4,6 +4,20 @@ Carbon Client
 .. image:: https://travis-ci.org/mosquito/carbon-client.svg?branch=master
     :target: https://travis-ci.org/mosquito/carbon-client
 
+.. image:: https://img.shields.io/pypi/v/carbon-client.svg
+    :target: https://pypi.python.org/pypi/carbon-client/
+    :alt: Latest Version
+
+.. image:: https://img.shields.io/pypi/wheel/carbon-client.svg
+    :target: https://pypi.python.org/pypi/carbon-client/
+
+.. image:: https://img.shields.io/pypi/pyversions/carbon-client.svg
+    :target: https://pypi.python.org/pypi/carbon-client/
+
+.. image:: https://img.shields.io/pypi/l/carbon-client.svg
+    :target: https://pypi.python.org/pypi/carbon-client/
+
+
 Client for sending metrics into carbon server
 
 Initialization

@@ -1,7 +1,7 @@
 # encoding: utf-8
-from .udp import UDPClient
-from .metrics import Counter, Timer, Collector
-from . import stat
+from carbon.client.udp import UDPClient
+from carbon.client.metrics import Counter, Timer, Collector
+from carbon.client import stat
 
 
 class SimpleMeasurerBase(object):

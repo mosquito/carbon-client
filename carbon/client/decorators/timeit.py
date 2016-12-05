@@ -1,6 +1,6 @@
 # encoding: utf-8
 from functools import wraps
-from .. import stat, metrics
+from carbon.client import stat, metrics
 
 
 def timeit(name, client=stat):

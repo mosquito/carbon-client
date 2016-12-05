@@ -11,7 +11,7 @@ class LockFlagTest(unittest.TestCase):
 
     def tearDown(self):
         self.lock = None
-        
+
     def testLock(self):
         self.a = 0
 

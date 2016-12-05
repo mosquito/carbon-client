@@ -23,7 +23,9 @@ class Metric(object):
         return hash(tuple(self))
 
     def __iter__(self):
-        return iter((self.__name, self.__value, self.__ts))
+        yield self.__name
+        yield self.__value
+        yield self.__ts
 
     def __eq__(self, other):
         if not isinstance(other, Metric):
@@ -38,7 +40,7 @@ class Metric(object):
         return tuple(self) > tuple(other)
 
 
-class MeasurerAbstract(object):
+class MeasurerAbstract(object):                 #pragma: nocover
     @abstractmethod
     def __init__(self, cleanup=None):
         raise NotImplementedError

@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 import os
 
-from .udp import UDPClient
+from carbon.client.udp import UDPClient
 
 stat = UDPClient(
     hosts=os.getenv('CARBON_HOSTS', os.getenv('CARBON_HOST', '127.0.0.1')),

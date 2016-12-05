@@ -24,9 +24,10 @@ ENV = {
 }
 
 
-with patch('socket.socket', spec=socket.socket) as fake_socket,\
-        patch('time.time', new=lambda: now),\
+with patch('socket.socket', spec=socket.socket) as fake_socket, \
+        patch('time.time', new=lambda: now), \
         patch('os.getenv', new=ENV.get):
+
     from carbon import client
 
 

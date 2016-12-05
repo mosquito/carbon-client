@@ -1,7 +1,7 @@
 # encoding: utf-8
 from time import time
 from threading import RLock
-from .base import MeasurerBase, Metric
+from carbon.client.metrics.base import MeasurerBase, Metric
 
 
 class StopWatch(object):

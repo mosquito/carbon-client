@@ -1,21 +1,15 @@
 # encoding: utf-8
 import re
 import logging
-
 from functools import wraps
 from socket import socket, AF_INET, SOCK_DGRAM
 
-from . import metrics
-from .metrics.base import MeasurerBase
+from carbon.client import metrics
+from carbon.client.metrics.base import MeasurerBase
+from carbon.client.compat import b, basestring
 
 
 log = logging.getLogger('carbon.client.udp')
-
-
-try:
-    basestring
-except NameError:
-    basestring = str
 
 
 class LockFlag(object):
@@ -64,6 +58,9 @@ class UDPClient(object):
                 port = int(port)
             else:
                 host, port = host_str, 2003
+
+            if not isinstance(host, str):
+                host = host.decode()
 
             endpoints.append((host, port))
 
@@ -119,8 +116,11 @@ class UDPClient(object):
         return self.__metrics[item]
 
     def __setitem__(self, name, metric_type):
-        assert issubclass(metric_type, MeasurerBase), "Unknown metric type"
-        assert isinstance(name, basestring)
+        if not issubclass(metric_type, MeasurerBase):
+            raise ValueError("Unknown metric type")
+
+        if not isinstance(name, basestring):
+            raise ValueError("Invalid metric name")
 
         if name not in self or self.__metrics.get(name) is not metric_type:
             self.__add_metric(metric_type, name)
@@ -129,7 +129,20 @@ class UDPClient(object):
     def send(self):
         metric_set = list(self.__metrics.values())
 
-        packet = "\n".join(filter(lambda x: x, map(lambda x: x.str(self.__ns), metric_set)))
+        packet = b(
+            "\n".join(
+                filter(
+                    lambda x: x,
+                    map(
+                        lambda x: x.str(self.__ns),
+                        metric_set
+                    )
+                )
+            )
+        )
+
+        if isinstance(packet, basestring):
+            packet = packet.encode()
 
         for host, port in self.__endpoints:
             self.socket.sendto(packet, (host, port))

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import random
 from . import Base, gen_uuid, client, now
 from time import sleep
+from six import b
 
 
 class TestTimer(Base):
@@ -15,4 +15,4 @@ class TestTimer(Base):
         self.client[name].stop(watch)
 
         data = self.get_packet()
-        self.assertTrue(data.split('%s.%s %d %.2f' % (self.ns, name, 0, now)))
+        self.assertTrue(data.split(b('%s.%s %d %.2f' % (self.ns, name, 0, now))))

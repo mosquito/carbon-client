@@ -2,6 +2,7 @@
 # encoding: utf-8
 from . import Base, gen_uuid, now, gen_int
 from time import sleep
+from six import b
 from carbon.client import extras, stat
 
 
@@ -19,7 +20,7 @@ class TestSimpleCounter(Base):
             sleep(0.4)
 
         data = self.get_packet()
-        self.assertTrue(data.split('%s.%s_ok %d %.2f' % (self.ns, name, 1, now)))
+        self.assertTrue(data.split(b('%s.%s_ok %d %.2f' % (self.ns, name, 1, now))))
 
     def testCounterFAIL(self):
         name = gen_uuid()
@@ -32,7 +33,7 @@ class TestSimpleCounter(Base):
             pass
 
         data = self.get_packet()
-        self.assertTrue(data.split('%s.%s_fail %d %.2f' % (self.ns, name, 1, now)))
+        self.assertTrue(data.split(b('%s.%s_fail %d %.2f' % (self.ns, name, 1, now))))
 
 
 class TestSimpleTimer(Base):
@@ -43,7 +44,7 @@ class TestSimpleTimer(Base):
             pass
 
         data = self.get_packet()
-        self.assertTrue(data.split('%s.%s_ok %d %.2f' % (self.ns, name, 0, now)))
+        self.assertTrue(data.split(b('%s.%s_ok %d %.2f' % (self.ns, name, 0, now))))
 
     def testTimerFail(self):
         name = gen_uuid()
@@ -55,7 +56,7 @@ class TestSimpleTimer(Base):
             pass
 
         data = self.get_packet()
-        self.assertTrue(data.split('%s.%s_fail %d %.2f' % (self.ns, name, 0, now)))
+        self.assertTrue(data.split(b('%s.%s_fail %d %.2f' % (self.ns, name, 0, now))))
 
 
 class TestSimpleCollector(Base):
@@ -67,4 +68,4 @@ class TestSimpleCollector(Base):
             collector.add(meas)
 
         data = self.get_packet()
-        self.assertTrue(data.split('%s.%s_ok %d %.2f' % (self.ns, name, meas, now)))
+        self.assertTrue(data.split(b('%s.%s_ok %d %.2f' % (self.ns, name, meas, now))))
