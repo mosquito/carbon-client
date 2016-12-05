@@ -117,17 +117,13 @@ class UDPClient(object):
     def send(self):
         metric_set = list(self.__metrics.values())
 
-        packet = "\n".join(
-            filter(lambda x: x, map(lambda x: x.str(self.__ns), metric_set))
-        )
+        packet = "\n".join(filter(lambda x: x, map(lambda x: x.str(self.__ns), metric_set)))
 
         for host, port in self.__endpoints:
-            self.socket.sendto(
-                packet,
-                (host, port)
-            )
+            self.socket.sendto(packet, (host, port))
 
-        map(lambda m: m.on_send(), metric_set)
+        for m in metric_set:
+            m.on_send()
 
     def close(self):
         self.socket.close()
