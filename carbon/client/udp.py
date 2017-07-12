@@ -125,6 +125,9 @@ class UDPClient(object):
         if name not in self or self.__metrics.get(name) is not metric_type:
             self.__add_metric(metric_type, name)
 
+    def _sender(self, packet, host, port):
+        self.socket.sendto(packet, (host, port))
+
     @LOCK
     def send(self):
         metric_set = list(self.__metrics.values())
@@ -145,7 +148,7 @@ class UDPClient(object):
             packet = packet.encode()
 
         for host, port in self.__endpoints:
-            self.socket.sendto(packet, (host, port))
+            self._sender(packet, host, port)
 
         for m in metric_set:
             m.on_send()

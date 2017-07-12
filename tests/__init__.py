@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from mock import patch
 import socket
 import uuid
 import random
 import unittest
+
+
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 
 def gen_uuid():
@@ -50,4 +55,10 @@ class Base(unittest.TestCase):
         host, port = remote
         self.assertEqual(host, self.host)
         self.assertEqual(port, self.port)
+
         return data
+
+    def parse_packet(self, packet):
+        for line in packet.splitlines():
+            ns, value, ts = line.decode().split(" ")
+            yield ns, int(value), int(ts)
