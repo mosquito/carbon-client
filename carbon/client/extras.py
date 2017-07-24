@@ -19,16 +19,17 @@ class SimpleMeasurerBase(object):
 class SimpleCounter(SimpleMeasurerBase):
     TYPE = Counter
 
-    def __enter__(self):
-        metric = "%s_ok" % self._metric
+    def inc(self, status):
+        metric = "{}_{}".format(self._metric, status)
         self._client[metric] = self.TYPE
         self._client[metric].inc(1)
 
+    def __enter__(self):
+        self.inc("ok")
+
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type is not None:
-            metric = "%s_fail" % self._metric
-            self._client[metric] = self.TYPE
-            self._client[metric].inc(1)
+        if exc_val:
+            self.inc("fail")
 
 
 class SimpleTimer(SimpleMeasurerBase):
