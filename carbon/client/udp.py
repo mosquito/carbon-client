@@ -148,7 +148,10 @@ class UDPClient(object):
             packet = packet.encode()
 
         for host, port in self.__endpoints:
-            self._sender(packet, host, port)
+            try:
+                self._sender(packet, host, port)
+            except Exception as e:
+                log.exception("Error when sending data to carbon")
 
         for m in metric_set:
             m.on_send()
