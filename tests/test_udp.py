@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from unittest.mock import Mock
+try:
+    from unittest.mock import Mock
+except ImportError:
+    from mock import Mock
 
 from six import b
 

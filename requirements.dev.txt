@@ -2,4 +2,3 @@ mock
 nose
 coverage
 six
-mock
