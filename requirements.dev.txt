@@ -2,4 +2,4 @@ mock
 nose
 coverage
 six
-unittest
+mock
