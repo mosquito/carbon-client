@@ -16,7 +16,7 @@ def create_future(loop):
 
 class AsyncUDPSocket:
 
-    __slots__ = '__loop', '__sock', '__address', '__futures', '__closed'
+    __slots__ = '__loop', '__sock', '__address', '__futures', '__closed', '__writer_added'
 
     def __init__(self, loop=None):
         self.__loop = asyncio.get_event_loop() if loop is None else loop
@@ -25,7 +25,7 @@ class AsyncUDPSocket:
 
         self.__futures = list()
         self.__closed = False
-        self.__loop.add_writer(self.__sock.fileno(), self.__sender)
+        self.__writer_added = False
 
     def sendto(self, data, host, port):
         data = data if isinstance(data, bytes) else str(data).encode('utf-8')
@@ -34,10 +34,16 @@ class AsyncUDPSocket:
         destination = (data, host, port)
         self.__futures.append((destination, future))
 
+        if not self.__writer_added:
+            self.__loop.add_writer(self.__sock.fileno(), self.__sender)
+            self.__writer_added = True
+
         return future
 
     def __sender(self):
         if not self.__futures:
+            self.__loop.remove_writer(self.__sock.fileno())
+            self.__writer_added = False
             return
 
         destination, future = self.__futures[0]
