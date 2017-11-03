@@ -87,4 +87,4 @@ class UDPClient(BaseUDPClient):
         return self.__socket
 
     def _sender(self, packet, host, port):
-        self.__loop.create_task(self.socket.sendto(packet, host, port))
+        asyncio.ensure_future(self.socket.sendto(packet, host, port), loop=self.__loop)
